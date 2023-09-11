@@ -4,14 +4,25 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
-            "name": "Sample ODS",
+            "name": "Laptop Sample ODS",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "justMyCode": false,
-            "args": ["-i", "wlp2s0", "./ssl-configurations-2023-09-05.ods"]
-        }
+            "justMyCode": true,
+            "args": ["-i", "wlp2s0", "-o", "output.json", "./ssl-configurations-2023-09-05.ods"]
+        },
+
+        {
+            "name": "Desktop Sample ODS",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["-i", "enp10s0", "-o", "output.json","./ssl-configurations-2023-09-05.ods"]
+        },
     ]
 }
