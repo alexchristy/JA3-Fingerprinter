@@ -1,0 +1,12 @@
+JA3-GEN-ENV
+
+# JSON output files
+/*.json
+
+# ODS Input files
+/*.ods
+
+# PCAP files
+/*.pcap
+
+__pycache__
