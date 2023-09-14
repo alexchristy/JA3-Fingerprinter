@@ -19,7 +19,7 @@
             "name": "Desktop Sample ODS",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            "program": "main.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": ["-i", "enp10s0", "-o", "output.json","./ssl-configurations-2023-09-05.ods"]

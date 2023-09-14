@@ -4,7 +4,7 @@ import re
 import dpkt
 import io
 import subprocess
-from threading import Thread, Event
+from threading import Event
 from requests.exceptions import ConnectTimeout, SSLError, RequestException
 import ja3s
 import pyexcel_ods
@@ -58,8 +58,6 @@ def generate_traffic(ip, port):
     return 0
 
 def capture_packets(ip, port, iface):
-    tshark_done_event = Event()
-    interaction_done_event = Event()
 
     port_filter = f" and port {port}"
     pcap_file = f"{ip}.pcap"
@@ -83,8 +81,12 @@ def capture_packets(ip, port, iface):
         if status_code == 1:
             failed_attempts += 1
 
-        if failed_attempts >= 3:
+        if failed_attempts >= 1:
             capture_process.terminate()
+
+            if os.path.exists(pcap_file):
+                os.remove(pcap_file) 
+
             return None
 
     return pcap_file
@@ -113,7 +115,7 @@ def main():
         if port == '':
             port = "443"
 
-        logging.info(f'{"="*10}({target}:{port}){"="*10}')
+        logging.info(f'{"="*10}({target}){"="*10}')
 
         # Here to turn on any port for
         # jaw3s.process_pcap
@@ -124,8 +126,6 @@ def main():
 
         # Unable to generate traffic to IP
         if pcap_file is None:
-            if os.path.exists(pcap_file):
-                os.remove(pcap_file)
             continue
 
         # Read pcap file
@@ -150,6 +150,10 @@ def main():
 
 def write_json_to_file(data, file_path):
 
+    if len(data) == 0:
+        print("No data to write to file.")
+        return
+
     try:
         with open(file_path, 'a') as f:
             for entry in data:
@@ -168,11 +172,8 @@ def get_targets_from_ods(file_path: str):
         print(f'Cannot find file: {file_path}')
 
     parsed_data = pyexcel_ods.get_data(file_path)
-
     ip_port_pattern = r"(\d+\.\d+\.\d+\.\d+:\d+)"
-
     ip_port_list = re.findall(ip_port_pattern, str(parsed_data))
-
     return ip_port_list
 
 

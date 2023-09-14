@@ -5,7 +5,7 @@ import argparse
 import dpkt
 import json
 import socket
-import struct
+import logging
 import os
 from hashlib import md5
 from distutils.version import LooseVersion
@@ -110,7 +110,7 @@ def process_pcap(pcap, any_port=False):
         if len(records) <= 0:
             continue
 
-        for record in records:
+        for i, record in enumerate(records):
             if record.type != TLS_HANDSHAKE:
                 continue
             if len(record.data) == 0:
@@ -128,6 +128,7 @@ def process_pcap(pcap, any_port=False):
                 # Still not the HELLO
                 continue
 
+            logging.info(f'Found server HELLO packet')
             server_handshake = handshake.data
             ja3 = [str(server_handshake.version)]
 
